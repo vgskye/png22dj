@@ -36,9 +36,6 @@ jobs:
           version: latest
       - name: Setup Node
         uses: actions/setup-node@v4
-        with:
-          cache: 'pnpm'
-          cache-dependency-path: "/web/pnpm-lock.yaml"
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
