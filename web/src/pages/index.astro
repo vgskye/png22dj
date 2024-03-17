@@ -1,0 +1,125 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<html
+  lang="en"
+  class="w-full min-h-full flex items-center justify-center bg-slate-900 text-slate-100"
+>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>2dja tool</title>
+  </head>
+  <body
+    class="max-w-4xl w-full bg-slate-800 p-4 md:rounded-lg h-full md:h-auto md:m-12 shadow-2xl space-y-3"
+  >
+    <h1 class="text-3xl font-bold flex flex-row items-center gap-1">
+      <Icon name="fluent:convert-range-24-regular" class="size-8" />
+      2dja tool
+    </h1>
+    <h2 class="text-xl font-semibold">Options</h2>
+    <div class="input">
+      <label for="upload" class="label flex flex-row items-center gap-1">
+        <Icon name="fluent:image-20-regular" class="size-5" />
+        Image
+      </label>
+      <input
+        id="upload"
+        type="file"
+        accept="image/*"
+        class="appearance-none file:file-button text-slate-300"
+      />
+    </div>
+    <div class="input">
+      <label for="name" class="label flex flex-row items-center gap-1">
+        <Icon name="fluent:rename-20-regular" class="size-5" />
+        Name
+      </label>
+      <input id="name" type="text" class="textbox" />
+    </div>
+    <div class="input">
+      <label class="label flex flex-col gap-1">
+        <div class="flex flex-row gap-1 items-center">
+          <Icon name="fluent:table-settings-20-regular" class="size-5" />
+          Tile size
+        </div>
+        <div class="flex flex-row gap-1 items-center">
+          <input
+            id="width"
+            type="number"
+            min="1"
+            value="1"
+            step="1"
+            class="textbox grow"
+          />
+          X
+          <input
+            id="height"
+            type="number"
+            min="1"
+            value="1"
+            step="1"
+            class="textbox grow"
+          />
+        </div>
+      </label>
+    </div>
+    <h2 class="text-xl font-semibold">Preview</h2>
+    <canvas id="canvas" width="128" height="128" class="bg-white"></canvas>
+    <div class="flex flex-row gap-2">
+      <button id="preview" class="button">
+        <Icon name="fluent:resize-image-20-regular" class="size-5" />
+        Preview
+      </button>
+      <button id="save" class="button">
+        <Icon name="fluent:save-20-regular" class="size-5" />
+        Save
+      </button>
+    </div>
+    <script src="../scripts/main.ts"></script>
+  </body>
+</html>
+
+<style>
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  @layer utilities {
+    .input {
+      @apply flex flex-col;
+    }
+
+    .label {
+      @apply text-lg font-semibold text-slate-300;
+    }
+
+    .textbox {
+      @apply text-slate-100 bg-slate-700 rounded p-1 focus:border-teal-500 focus:ring-0 outline-none placeholder:text-slate-300;
+    }
+
+    .button {
+      @apply text-slate-100 flex flex-row items-center gap-1 p-2 bg-slate-700 rounded hover:bg-slate-600 focus:bg-slate-600;
+    }
+
+    .file-button {
+      @apply border-none text-slate-100 gap-1 p-2 bg-slate-700 rounded hover:bg-slate-600 focus:bg-slate-600;
+    }
+  }
+
+  @layer base {
+    input[type="number"] {
+      -webkit-appearance: textfield;
+      -moz-appearance: textfield;
+      appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+    }
+  }
+</style>

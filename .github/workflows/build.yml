@@ -1,0 +1,75 @@
+name: 'Deploy to Pages'
+on:
+  push:
+    branches: [$default-branch]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # checkout
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+      # wasm toolchain
+      - name: Setup sccache
+        uses: mozilla-actions/sccache-action@v0.0.4
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+            targets: wasm32-unknown-unknown
+      - name: Setup wasm-pack
+        run: curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+      # web toolchain
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: latest
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'pnpm'
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
+      # wasm build
+      - name: Build wasm
+        run: wasm-pack build
+        env:
+          SCCACHE_GHA_ENABLED: "true"
+          RUSTC_WRAPPER: "sccache"
+      # frontend build
+      - name: Install frontend deps
+        run: pnpm install
+        working-directory: "/png22dj-web"
+      - name: Build frontend
+        run: pnpm astro build \
+            --site "${{ steps.pages.outputs.origin }}" \
+            --base "${{ steps.pages.outputs.base_path }}"
+        working-directory: "/png22dj-web"
+      # frontend deploy
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "/png22dj-web/dist"
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
