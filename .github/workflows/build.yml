@@ -48,17 +48,17 @@ jobs:
       # frontend build
       - name: Install frontend deps
         run: pnpm install
-        working-directory: "/web"
+        working-directory: "web"
       - name: Build frontend
         run: pnpm astro build \
             --site "${{ steps.pages.outputs.origin }}" \
             --base "${{ steps.pages.outputs.base_path }}"
-        working-directory: "/web"
+        working-directory: "web"
       # frontend deploy
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: "/web/dist"
+          path: "web/dist"
   deploy:
     environment:
       name: github-pages
